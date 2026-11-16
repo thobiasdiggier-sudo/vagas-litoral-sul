@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block titulo %}Vagas abertas{% endblock %}
+
+{% block conteudo %}
+<h1>Vagas abertas</h1>
+
+<details class="secao caixa-filtros" {% if form.is_bound %}open{% endif %}>
+  <summary>Busca e filtros</summary>
+  {% include "vagas/_filtros.html" %}
+</details>
+
+<p class="resultado" role="status">
+  {{ pagina.paginator.count }} vaga{{ pagina.paginator.count|pluralize }} encontrada{{ pagina.paginator.count|pluralize }}
+  {% if form.is_bound and form.cleaned_data.q %} para “{{ form.cleaned_data.q }}”{% endif %}.
+</p>
+
+{% if pagina.object_list %}
+  <div class="grade-vagas">
+    {% for vaga in pagina %}
+      {% include "vagas/_card_vaga.html" %}
+    {% endfor %}
+  </div>
+  {% include "vagas/_paginacao.html" %}
+{% else %}
+  <p class="vazio">Nenhuma vaga encontrada com esses filtros. Tente outra palavra-chave ou limpe os filtros.</p>
+{% endif %}
+{% endblock %}

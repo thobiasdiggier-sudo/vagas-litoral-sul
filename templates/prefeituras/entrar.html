@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block titulo %}Entrar – Área da prefeitura{% endblock %}
+
+{% block conteudo %}
+<h1>Área da prefeitura</h1>
+<p>Acesso restrito aos operadores das prefeituras e à equipe do IFRN.</p>
+
+<form method="post" class="formulario formulario--estreito">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="mensagem mensagem--erro" role="alert">
+      Usuário ou senha incorretos, ou usuário desativado. Tente novamente.
+    </div>
+  {% endif %}
+
+  <div class="campo">{{ form.username.as_field_group }}</div>
+  <div class="campo">{{ form.password.as_field_group }}</div>
+  <input type="hidden" name="next" value="{{ next }}">
+
+  <div class="acoes">
+    <button type="submit" class="botao botao--primario">Entrar</button>
+  </div>
+</form>
+
+<p class="ajuda">Esqueceu a senha? Peça à equipe do IFRN Campus Canguaretama para redefini-la.</p>
+{% endblock %}

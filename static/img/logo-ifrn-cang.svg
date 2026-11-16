@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 96" width="300" height="96" role="img" aria-labelledby="titulo-logo">
+  <title id="titulo-logo">IFRN Campus Canguaretama (logotipo provisório)</title>
+  <!-- Logotipo PROVISÓRIO. Substitua este arquivo pelo logotipo oficial do IFRN,
+       mantendo o mesmo nome: static/img/logo-ifrn-cang.svg -->
+  <rect x="2" y="2" width="296" height="92" rx="8" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  <text x="150" y="46" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="34" font-weight="800" fill="#FFFFFF">IFRN</text>
+  <text x="150" y="76" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="17" font-weight="600" fill="#FFFFFF">Campus Canguaretama</text>
+</svg>

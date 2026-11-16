@@ -1,0 +1,19 @@
+{% extends "prefeituras/base_area.html" %}
+
+{% block titulo %}Excluir vaga{% endblock %}
+
+{% block area %}
+<h1>Excluir vaga</h1>
+
+<p class="mensagem mensagem--aviso">
+  Tem certeza de que deseja excluir definitivamente a vaga
+  <strong>“{{ vaga.titulo }}”</strong> ({{ vaga.empresa }})?
+  Esta ação não pode ser desfeita. Se a vaga só foi preenchida, prefira <strong>Encerrar</strong>.
+</p>
+
+<form method="post" class="acoes">
+  {% csrf_token %}
+  <button type="submit" class="botao botao--perigo">Sim, excluir</button>
+  <a class="botao botao--secundario" href="{% url 'prefeituras:vagas_lista' %}">Cancelar</a>
+</form>
+{% endblock %}

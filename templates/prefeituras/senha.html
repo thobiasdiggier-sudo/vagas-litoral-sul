@@ -1,0 +1,17 @@
+{% extends "prefeituras/base_area.html" %}
+
+{% block titulo %}Trocar senha{% endblock %}
+
+{% block area %}
+<h1>Trocar senha</h1>
+
+<form method="post" class="formulario formulario--estreito">
+  {% csrf_token %}
+  {% for campo in form %}
+    <div class="campo">{{ campo.as_field_group }}</div>
+  {% endfor %}
+  <div class="acoes">
+    <button type="submit" class="botao botao--primario">Alterar senha</button>
+  </div>
+</form>
+{% endblock %}

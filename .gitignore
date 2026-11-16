@@ -1,0 +1,20 @@
+# Ambiente virtual
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Configuração local e banco de dados
+.env
+db.sqlite3
+db.sqlite3-journal
+
+# Arquivos gerados pelo collectstatic
+staticfiles/
+
+# Editores e sistema
+.vscode/
+.idea/
+.DS_Store

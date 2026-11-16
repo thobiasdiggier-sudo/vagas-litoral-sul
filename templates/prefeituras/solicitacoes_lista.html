@@ -1,0 +1,47 @@
+{% extends "prefeituras/base_area.html" %}
+
+{% block titulo %}Solicitações das empresas{% endblock %}
+
+{% block area %}
+<h1>Solicitações das empresas</h1>
+
+<nav class="abas" aria-label="Filtrar por situação">
+  <ul>
+    {% for valor, rotulo in situacoes %}
+      <li><a href="?situacao={{ valor }}" {% if situacao == valor %}aria-current="page"{% endif %}>{{ rotulo }}s</a></li>
+    {% endfor %}
+    <li><a href="?situacao=todas" {% if situacao == "todas" %}aria-current="page"{% endif %}>Todas</a></li>
+  </ul>
+</nav>
+
+{% if pagina.object_list %}
+  <div class="tabela-rolagem">
+    <table class="tabela">
+      <caption class="visualmente-oculto">Solicitações</caption>
+      <thead>
+        <tr>
+          <th scope="col">Vaga</th>
+          <th scope="col">Empresa</th>
+          {% if request.eh_admin %}<th scope="col">Município</th>{% endif %}
+          <th scope="col">Enviada em</th>
+          <th scope="col">Situação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for solicitacao in pagina %}
+          <tr>
+            <td><a href="{% url 'prefeituras:solicitacao_detalhe' solicitacao.pk %}">{{ solicitacao.titulo }}</a></td>
+            <td>{{ solicitacao.empresa }}</td>
+            {% if request.eh_admin %}<td>{{ solicitacao.municipio.nome }}</td>{% endif %}
+            <td>{{ solicitacao.criado_em|date:"d/m/Y H:i" }}</td>
+            <td><span class="situacao situacao--{{ solicitacao.situacao }}">{{ solicitacao.get_situacao_display }}</span></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "vagas/_paginacao.html" %}
+{% else %}
+  <p class="vazio">Nenhuma solicitação nesta lista.</p>
+{% endif %}
+{% endblock %}

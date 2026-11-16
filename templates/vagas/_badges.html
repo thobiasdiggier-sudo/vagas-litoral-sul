@@ -1,0 +1,8 @@
+{# Etiquetas (badges) de área, contrato e PcD. Recebe a variável "vaga". #}
+<ul class="badges" aria-label="Características da vaga">
+  <li class="badge badge--area">{{ vaga.area.nome }}</li>
+  <li class="badge badge--contrato">{{ vaga.get_tipo_contrato_display }}</li>
+  {% if vaga.pcd %}
+    <li class="badge badge--pcd"><abbr title="Vaga para pessoa com deficiência">PcD</abbr></li>
+  {% endif %}
+</ul>

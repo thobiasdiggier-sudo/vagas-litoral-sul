@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block titulo %}Acesso negado{% endblock %}
+
+{% block conteudo %}
+<h1>Acesso negado</h1>
+<p>Você não tem permissão para acessar esta página.</p>
+<p>
+  Se você é operador de uma prefeitura e acredita que isso é um erro, peça à
+  equipe do IFRN para conferir o vínculo do seu usuário com a prefeitura.
+</p>
+<p><a class="botao botao--primario" href="{% url 'vagas:inicio' %}">Ir para a página inicial</a></p>
+{% endblock %}

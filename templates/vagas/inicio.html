@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block titulo %}Início{% endblock %}
+
+{% block conteudo %}
+<section class="destaque" aria-labelledby="titulo-inicio">
+  <h1 id="titulo-inicio">Encontre seu emprego no Agreste Litoral Sul</h1>
+  <p class="destaque__texto">
+    Vagas abertas nos municípios da região, reunidas pelas prefeituras e pelo
+    IFRN Campus Canguaretama. A candidatura é feita direto com o contratante.
+  </p>
+
+  <ul class="contadores" aria-label="Números do portal">
+    <li class="contador">
+      <span class="contador__numero">{{ total_vagas }}</span>
+      <span class="contador__rotulo">vagas abertas</span>
+      <span class="contador__detalhe">em {{ total_anuncios }} anúncio{{ total_anuncios|pluralize }}</span>
+    </li>
+    <li class="contador">
+      <span class="contador__numero">{{ total_municipios }}</span>
+      <span class="contador__rotulo">municípios participantes</span>
+    </li>
+  </ul>
+</section>
+
+<section class="secao" aria-labelledby="titulo-busca">
+  <h2 id="titulo-busca">Buscar vagas</h2>
+  {% include "vagas/_filtros.html" %}
+</section>
+
+<section aria-labelledby="titulo-recentes">
+  <h2 id="titulo-recentes">Vagas mais recentes</h2>
+  {% if ultimas_vagas %}
+    <div class="grade-vagas">
+      {% for vaga in ultimas_vagas %}
+        {% include "vagas/_card_vaga.html" %}
+      {% endfor %}
+    </div>
+    <p><a class="botao botao--primario" href="{% url 'vagas:lista' %}">Ver todas as vagas</a></p>
+  {% else %}
+    <p class="vazio">Nenhuma vaga aberta no momento. Volte em breve!</p>
+  {% endif %}
+</section>
+
+<section class="secao secao--chamada" aria-labelledby="titulo-empresa">
+  <h2 id="titulo-empresa">Sua empresa está contratando?</h2>
+  <p>Divulgue gratuitamente. A vaga é publicada depois de conferida pela prefeitura.</p>
+  <p><a class="botao botao--primario" href="{% url 'vagas:divulgar' %}">Divulgue sua vaga</a></p>
+</section>
+{% endblock %}

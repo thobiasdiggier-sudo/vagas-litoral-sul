@@ -1,0 +1,76 @@
+{% extends "prefeituras/base_area.html" %}
+
+{% block titulo %}Vagas do município{% endblock %}
+
+{% block area %}
+<div class="titulo-com-acao">
+  <h1>Vagas</h1>
+  <a class="botao botao--primario" href="{% url 'prefeituras:vaga_criar' %}">Nova vaga</a>
+</div>
+
+<form method="get" class="filtros filtros--linha">
+  <div class="campo">
+    <label for="busca-vagas">Buscar</label>
+    <input type="search" id="busca-vagas" name="q" value="{{ termo }}" placeholder="Título ou empresa">
+  </div>
+  <div class="campo">
+    <label for="filtro-situacao">Situação</label>
+    <select id="filtro-situacao" name="situacao">
+      <option value="">Todas</option>
+      {% for valor, rotulo in situacoes %}
+        <option value="{{ valor }}" {% if valor == situacao %}selected{% endif %}>{{ rotulo }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="acoes">
+    <button type="submit" class="botao botao--secundario">Filtrar</button>
+  </div>
+</form>
+
+{% if pagina.object_list %}
+  <div class="tabela-rolagem">
+    <table class="tabela">
+      <caption class="visualmente-oculto">Vagas cadastradas</caption>
+      <thead>
+        <tr>
+          <th scope="col">Vaga</th>
+          {% if request.eh_admin %}<th scope="col">Município</th>{% endif %}
+          <th scope="col">Situação</th>
+          <th scope="col">Expira em</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vaga in pagina %}
+          <tr>
+            <td>
+              <a href="{% url 'prefeituras:vaga_editar' vaga.pk %}">{{ vaga.titulo }}</a><br>
+              <small>{{ vaga.empresa }}{% if vaga.origem == "empresa" %} · enviada por empresa{% endif %}</small>
+            </td>
+            {% if request.eh_admin %}<td>{{ vaga.municipio.nome }}</td>{% endif %}
+            <td><span class="situacao situacao--{{ vaga.situacao_exibida|slugify }}">{{ vaga.situacao_exibida }}</span></td>
+            <td>{{ vaga.data_expiracao|date:"d/m/Y" }}</td>
+            <td class="tabela__acoes">
+              <a class="botao botao--pequeno botao--secundario" href="{% url 'prefeituras:vaga_editar' vaga.pk %}">Editar<span class="visualmente-oculto">: {{ vaga.titulo }}</span></a>
+              {% if vaga.esta_publicada %}
+                <form action="{% url 'prefeituras:vaga_encerrar' vaga.pk %}" method="post" class="form-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="botao botao--pequeno botao--secundario">Encerrar<span class="visualmente-oculto">: {{ vaga.titulo }}</span></button>
+                </form>
+              {% endif %}
+              <form action="{% url 'prefeituras:vaga_renovar' vaga.pk %}" method="post" class="form-inline">
+                {% csrf_token %}
+                <button type="submit" class="botao botao--pequeno botao--primario">Renovar 30 dias<span class="visualmente-oculto">: {{ vaga.titulo }}</span></button>
+              </form>
+              <a class="botao botao--pequeno botao--perigo" href="{% url 'prefeituras:vaga_excluir' vaga.pk %}">Excluir<span class="visualmente-oculto">: {{ vaga.titulo }}</span></a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "vagas/_paginacao.html" %}
+{% else %}
+  <p class="vazio">Nenhuma vaga encontrada.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,93 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Vagas Litoral Sul{% endblock %} | IFRN Campus Canguaretama</title>
+  <meta name="description" content="Portal de vagas de emprego dos municípios do Agreste Litoral Sul potiguar. Projeto de extensão do IFRN Campus Canguaretama.">
+  <link rel="stylesheet" href="{% static 'css/ifrn.css' %}">
+  {# Carregado no <head> para aplicar o alto contraste antes de desenhar a página #}
+  <script src="{% static 'js/acessibilidade.js' %}"></script>
+</head>
+<body>
+
+  {# Barra superior estilo gov.br #}
+  <div class="barra-govbr">
+    <div class="container barra-govbr__conteudo">
+      <a class="barra-govbr__marca" href="https://www.gov.br/">gov.br</a>
+      <ul class="barra-govbr__acessibilidade">
+        <li><a href="#conteudo" accesskey="1">Ir para o conteúdo <span aria-hidden="true">[1]</span></a></li>
+        <li>
+          <button type="button" id="botao-alto-contraste" class="botao-link" aria-pressed="false">
+            Alto contraste
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  {# Cabeçalho: logotipo, nome do sistema e busca #}
+  <header class="cabecalho">
+    <div class="container cabecalho__conteudo">
+      <a class="cabecalho__marca" href="{% url 'vagas:inicio' %}">
+        <img src="{% static 'img/logo-ifrn-cang.svg' %}" alt="IFRN Campus Canguaretama" width="150" height="48">
+        <span class="cabecalho__nome">Vagas Litoral Sul</span>
+      </a>
+      <form class="busca-topo" role="search" action="{% url 'vagas:lista' %}" method="get">
+        <label for="busca-topo" class="visualmente-oculto">Buscar vagas por palavra-chave</label>
+        <input type="search" id="busca-topo" name="q" placeholder="Buscar vagas..." value="{{ request.GET.q|default:'' }}">
+        <button type="submit" class="botao botao--claro">Buscar</button>
+      </form>
+    </div>
+  </header>
+
+  {# Menu principal #}
+  {% with nome_rota=request.resolver_match.url_name espaco=request.resolver_match.namespace %}
+  <nav class="menu" aria-label="Menu principal">
+    <ul class="container menu__lista">
+      <li><a href="{% url 'vagas:inicio' %}" {% if espaco == 'vagas' and nome_rota == 'inicio' %}aria-current="page"{% endif %}>Início</a></li>
+      <li><a href="{% url 'vagas:lista' %}" {% if nome_rota == 'lista' %}aria-current="page"{% endif %}>Vagas</a></li>
+      <li><a href="{% url 'vagas:divulgar' %}" {% if nome_rota == 'divulgar' %}aria-current="page"{% endif %}>Divulgue sua vaga</a></li>
+      <li><a href="{% url 'vagas:acompanhar' %}" {% if nome_rota == 'acompanhar' %}aria-current="page"{% endif %}>Acompanhar solicitação</a></li>
+      <li><a href="{% url 'vagas:sobre' %}" {% if nome_rota == 'sobre' %}aria-current="page"{% endif %}>Sobre</a></li>
+    </ul>
+  </nav>
+  {% endwith %}
+
+  <main id="conteudo" tabindex="-1">
+    <div class="container">
+      {% if messages %}
+        <div class="mensagens">
+          {% for mensagem in messages %}
+            <p class="mensagem mensagem--{{ mensagem.tags }}" {% if mensagem.tags == 'erro' %}role="alert"{% else %}role="status"{% endif %}>{{ mensagem }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block conteudo %}{% endblock %}
+    </div>
+  </main>
+
+  {# Rodapé #}
+  <footer class="rodape">
+    <div class="container rodape__conteudo">
+      <div>
+        <p class="rodape__titulo">Vagas Litoral Sul</p>
+        <p>Projeto de extensão do IFRN Campus Canguaretama</p>
+        <address>
+          BR-101, Km 160, S/N, Areia Branca<br>
+          Canguaretama/RN – CEP 59190-000
+        </address>
+      </div>
+      <nav aria-label="Links do rodapé">
+        <ul class="rodape__links">
+          <li><a href="{% url 'vagas:sobre' %}">Sobre</a></li>
+          <li><a href="{% url 'vagas:termo' %}">Termo de uso</a></li>
+          <li><a href="{% url 'prefeituras:painel' %}">Área da prefeitura</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

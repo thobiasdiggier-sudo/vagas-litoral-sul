@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block titulo %}Divulgue sua vaga{% endblock %}
+
+{% block conteudo %}
+<h1>Divulgue sua vaga</h1>
+<p>
+  O serviço é gratuito. Depois do envio, a prefeitura do município confere as
+  informações e publica a vaga. Você recebe um <strong>código de acompanhamento</strong>
+  para consultar a situação do pedido.
+</p>
+<p>Campos com * são obrigatórios.</p>
+
+<form method="post" class="formulario">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="mensagem mensagem--erro" role="alert">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <fieldset>
+    <legend>Sobre a vaga</legend>
+    <div class="campo">{{ form.titulo.as_field_group }}</div>
+    <div class="grade-2">
+      <div class="campo">{{ form.municipio.as_field_group }}</div>
+      <div class="campo">{{ form.area.as_field_group }}</div>
+    </div>
+    <div class="campo">{{ form.descricao.as_field_group }}</div>
+    <div class="grade-2">
+      <div class="campo">{{ form.tipo_contrato.as_field_group }}</div>
+      <div class="campo">{{ form.escolaridade.as_field_group }}</div>
+      <div class="campo">{{ form.quantidade.as_field_group }}</div>
+      <div class="campo">{{ form.salario.as_field_group }}</div>
+    </div>
+    <div class="campo">{{ form.jornada.as_field_group }}</div>
+    <div class="campo">{{ form.requisitos.as_field_group }}</div>
+    <div class="campo">{{ form.beneficios.as_field_group }}</div>
+    <div class="campo campo--checkbox">{{ form.pcd.as_field_group }}</div>
+    <div class="campo">{{ form.forma_candidatura.as_field_group }}</div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Sobre a empresa</legend>
+    <div class="grade-2">
+      <div class="campo">{{ form.empresa.as_field_group }}</div>
+      <div class="campo">{{ form.cnpj.as_field_group }}</div>
+    </div>
+    <p class="ajuda">
+      Os dados abaixo servem só para a prefeitura falar com você, se necessário.
+      Eles não aparecem no portal.
+    </p>
+    <div class="campo">{{ form.nome_responsavel.as_field_group }}</div>
+    <div class="grade-2">
+      <div class="campo">{{ form.email_responsavel.as_field_group }}</div>
+      <div class="campo">{{ form.telefone_responsavel.as_field_group }}</div>
+    </div>
+  </fieldset>
+
+  {# Campo armadilha (honeypot): escondido de pessoas, visível para robôs #}
+  <div class="campo-armadilha" aria-hidden="true">
+    {{ form.url_site.as_field_group }}
+  </div>
+
+  <fieldset>
+    <legend>Privacidade</legend>
+    <p>
+      Leia o <a href="{% url 'vagas:termo' %}" target="_blank" rel="noopener">Termo de uso e privacidade<span class="visualmente-oculto"> (abre em nova aba)</span></a>
+      antes de enviar.
+    </p>
+    <div class="campo campo--checkbox">{{ form.aceite_termo.as_field_group }}</div>
+  </fieldset>
+
+  <div class="acoes">
+    <button type="submit" class="botao botao--primario">Enviar solicitação</button>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block titulo %}Vagas em {{ municipio.nome }}{% endblock %}
+
+{% block conteudo %}
+<h1>Vagas em {{ municipio.nome }}/RN</h1>
+
+{% if prefeitura %}
+  <p class="info-prefeitura">
+    Responsável: {{ prefeitura.orgao_responsavel }}
+    {% if prefeitura.telefone %} · Telefone: {{ prefeitura.telefone }}{% endif %}
+    {% if prefeitura.email %} · E-mail: <a href="mailto:{{ prefeitura.email }}">{{ prefeitura.email }}</a>{% endif %}
+  </p>
+{% endif %}
+
+<p class="resultado" role="status">
+  {{ pagina.paginator.count }} vaga{{ pagina.paginator.count|pluralize }} aberta{{ pagina.paginator.count|pluralize }}.
+</p>
+
+{% if pagina.object_list %}
+  <div class="grade-vagas">
+    {% for vaga in pagina %}
+      {% include "vagas/_card_vaga.html" %}
+    {% endfor %}
+  </div>
+  {% include "vagas/_paginacao.html" %}
+{% else %}
+  <p class="vazio">Nenhuma vaga aberta em {{ municipio.nome }} no momento.</p>
+{% endif %}
+{% endblock %}

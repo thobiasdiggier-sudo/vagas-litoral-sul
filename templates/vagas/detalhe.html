@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ vaga.titulo }} – {{ vaga.municipio.nome }}{% endblock %}
+
+{% block conteudo %}
+<nav class="trilha" aria-label="Você está em">
+  <ol>
+    <li><a href="{% url 'vagas:inicio' %}">Início</a></li>
+    <li><a href="{% url 'vagas:municipio' vaga.municipio.slug %}">{{ vaga.municipio.nome }}</a></li>
+    <li aria-current="page">{{ vaga.titulo }}</li>
+  </ol>
+</nav>
+
+<article class="vaga-detalhe">
+  <header>
+    <h1>{{ vaga.titulo }}</h1>
+    <p class="vaga-detalhe__empresa">{{ vaga.empresa }} · {{ vaga.municipio.nome }}/RN</p>
+    {% include "vagas/_badges.html" %}
+  </header>
+
+  {% if not vaga.esta_publicada %}
+    <p class="mensagem mensagem--aviso" role="status">
+      Esta vaga não está mais disponível. Veja outras
+      <a href="{% url 'vagas:lista' %}">vagas abertas</a>.
+    </p>
+  {% else %}
+    {# Forma de candidatura em destaque #}
+    <section class="candidatura" aria-labelledby="titulo-candidatura">
+      <h2 id="titulo-candidatura">Como se candidatar</h2>
+      <p>{{ vaga.forma_candidatura|urlize|linebreaksbr }}</p>
+      <p class="candidatura__aviso">
+        A candidatura é feita diretamente com o contratante. O portal não recebe currículos.
+      </p>
+    </section>
+
+    <p>
+      <a class="botao botao--whatsapp" href="{{ link_whatsapp }}" target="_blank" rel="noopener noreferrer">
+        Compartilhar no WhatsApp<span class="visualmente-oculto"> (abre em nova aba)</span>
+      </a>
+    </p>
+  {% endif %}
+
+  <dl class="ficha">
+    <div><dt>Salário</dt><dd>{% if vaga.salario %}R$ {{ vaga.salario|floatformat:"2g" }}{% else %}A combinar{% endif %}</dd></div>
+    <div><dt>Quantidade de vagas</dt><dd>{{ vaga.quantidade }}</dd></div>
+    <div><dt>Tipo de contrato</dt><dd>{{ vaga.get_tipo_contrato_display }}</dd></div>
+    <div><dt>Escolaridade mínima</dt><dd>{{ vaga.get_escolaridade_display }}</dd></div>
+    <div><dt>Jornada</dt><dd>{{ vaga.jornada }}</dd></div>
+    <div><dt>Vaga PcD</dt><dd>{{ vaga.pcd|yesno:"Sim,Não" }}</dd></div>
+    <div><dt>Publicada em</dt><dd>{{ vaga.data_publicacao|date:"d/m/Y" }}</dd></div>
+    <div><dt>Inscrições até</dt><dd>{{ vaga.data_expiracao|date:"d/m/Y" }}</dd></div>
+  </dl>
+
+  <section aria-labelledby="titulo-descricao">
+    <h2 id="titulo-descricao">Descrição das atividades</h2>
+    <p>{{ vaga.descricao|linebreaksbr }}</p>
+  </section>
+
+  {% if vaga.requisitos %}
+  <section aria-labelledby="titulo-requisitos">
+    <h2 id="titulo-requisitos">Requisitos</h2>
+    <p>{{ vaga.requisitos|linebreaksbr }}</p>
+  </section>
+  {% endif %}
+
+  {% if vaga.beneficios %}
+  <section aria-labelledby="titulo-beneficios">
+    <h2 id="titulo-beneficios">Benefícios</h2>
+    <p>{{ vaga.beneficios|linebreaksbr }}</p>
+  </section>
+  {% endif %}
+</article>
+
+<p><a href="{% url 'vagas:lista' %}">« Voltar para a lista de vagas</a></p>
+{% endblock %}

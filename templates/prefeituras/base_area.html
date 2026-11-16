@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{# Modelo base da área logada: mostra o município e o menu da prefeitura #}
+
+{% block conteudo %}
+<div class="area-cabecalho">
+  <p class="area-cabecalho__usuario">
+    {% if request.eh_admin %}
+      Equipe do IFRN – <strong>todos os municípios</strong>
+    {% else %}
+      Prefeitura de <strong>{{ request.municipio_operador.nome }}</strong>
+    {% endif %}
+    · {{ request.user.get_full_name|default:request.user.username }}
+  </p>
+
+  {% with nome_rota=request.resolver_match.url_name %}
+  <nav class="menu-area" aria-label="Menu da área da prefeitura">
+    <ul>
+      <li><a href="{% url 'prefeituras:painel' %}" {% if nome_rota == 'painel' %}aria-current="page"{% endif %}>Painel</a></li>
+      <li><a href="{% url 'prefeituras:vagas_lista' %}" {% if nome_rota == 'vagas_lista' %}aria-current="page"{% endif %}>Vagas</a></li>
+      <li><a href="{% url 'prefeituras:vaga_criar' %}" {% if nome_rota == 'vaga_criar' %}aria-current="page"{% endif %}>Nova vaga</a></li>
+      <li><a href="{% url 'prefeituras:solicitacoes_lista' %}" {% if nome_rota == 'solicitacoes_lista' %}aria-current="page"{% endif %}>Solicitações</a></li>
+      {% if request.eh_admin %}
+        <li><a href="{% url 'prefeituras:estatisticas' %}" {% if nome_rota == 'estatisticas' %}aria-current="page"{% endif %}>Estatísticas</a></li>
+        <li><a href="{% url 'admin:index' %}">Django Admin</a></li>
+      {% endif %}
+      <li><a href="{% url 'prefeituras:senha' %}" {% if nome_rota == 'senha' %}aria-current="page"{% endif %}>Trocar senha</a></li>
+      <li>
+        {# No Django 5, sair exige POST (com token CSRF) #}
+        <form action="{% url 'prefeituras:sair' %}" method="post" class="form-inline">
+          {% csrf_token %}
+          <button type="submit" class="botao-link">Sair</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+  {% endwith %}
+</div>
+
+{% block area %}{% endblock %}
+{% endblock %}

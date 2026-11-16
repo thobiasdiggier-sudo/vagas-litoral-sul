@@ -1,0 +1,76 @@
+{% extends "prefeituras/base_area.html" %}
+
+{% block titulo %}Painel da prefeitura{% endblock %}
+
+{% block area %}
+<h1>Painel</h1>
+
+<ul class="contadores" aria-label="Resumo">
+  <li class="contador">
+    <span class="contador__numero">{{ total_abertas }}</span>
+    <span class="contador__rotulo">vagas abertas</span>
+  </li>
+  <li class="contador">
+    <span class="contador__numero">{{ vagas_expirando|length }}</span>
+    <span class="contador__rotulo">vencem nos próximos 7 dias</span>
+  </li>
+  <li class="contador {% if total_pendentes %}contador--alerta{% endif %}">
+    <span class="contador__numero">{{ total_pendentes }}</span>
+    <span class="contador__rotulo">solicitações pendentes</span>
+  </li>
+</ul>
+
+<section class="secao" aria-labelledby="titulo-expirando">
+  <h2 id="titulo-expirando">Vagas que vencem nos próximos 7 dias</h2>
+  {% if vagas_expirando %}
+    <div class="tabela-rolagem">
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th scope="col">Vaga</th>
+            {% if request.eh_admin %}<th scope="col">Município</th>{% endif %}
+            <th scope="col">Vence em</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for vaga in vagas_expirando %}
+            <tr>
+              <td><a href="{% url 'prefeituras:vaga_editar' vaga.pk %}">{{ vaga.titulo }}</a></td>
+              {% if request.eh_admin %}<td>{{ vaga.municipio.nome }}</td>{% endif %}
+              <td>{{ vaga.data_expiracao|date:"d/m/Y" }}</td>
+              <td>
+                <form action="{% url 'prefeituras:vaga_renovar' vaga.pk %}" method="post" class="form-inline">
+                  {% csrf_token %}
+                  <input type="hidden" name="voltar_para" value="painel">
+                  <button type="submit" class="botao botao--pequeno botao--primario">Renovar por mais 30 dias<span class="visualmente-oculto">: {{ vaga.titulo }}</span></button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="vazio">Nenhuma vaga vence nos próximos 7 dias.</p>
+  {% endif %}
+</section>
+
+<section class="secao" aria-labelledby="titulo-pendentes">
+  <h2 id="titulo-pendentes">Solicitações aguardando análise</h2>
+  {% if ultimas_pendentes %}
+    <ul class="lista-simples">
+      {% for solicitacao in ultimas_pendentes %}
+        <li>
+          <a href="{% url 'prefeituras:solicitacao_detalhe' solicitacao.pk %}">{{ solicitacao.titulo }}</a>
+          – {{ solicitacao.empresa }}{% if request.eh_admin %} ({{ solicitacao.municipio.nome }}){% endif %},
+          enviada em {{ solicitacao.criado_em|date:"d/m/Y" }}
+        </li>
+      {% endfor %}
+    </ul>
+    <p><a href="{% url 'prefeituras:solicitacoes_lista' %}">Ver a fila completa</a></p>
+  {% else %}
+    <p class="vazio">Nenhuma solicitação pendente.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "prefeituras/base_area.html" %}
+
+{% block titulo %}{{ titulo_pagina }}{% endblock %}
+
+{% block area %}
+<h1>{{ titulo_pagina }}</h1>
+
+{% if not request.eh_admin %}
+  <p>A vaga será publicada no município de <strong>{{ request.municipio_operador.nome }}</strong>.</p>
+{% endif %}
+{% if vaga and vaga.esta_publicada %}
+  <p><a href="{% url 'vagas:detalhe' vaga.pk %}">Ver como aparece no portal</a></p>
+{% endif %}
+
+<form method="post" class="formulario">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="mensagem mensagem--erro" role="alert">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <fieldset>
+    <legend>Dados da vaga</legend>
+    {% for campo in form %}
+      <div class="campo{% if campo.name == 'pcd' %} campo--checkbox{% endif %}">
+        {{ campo.as_field_group }}
+      </div>
+    {% endfor %}
+  </fieldset>
+
+  <div class="acoes">
+    <button type="submit" class="botao botao--primario">Salvar</button>
+    <a class="botao botao--secundario" href="{% url 'prefeituras:vagas_lista' %}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

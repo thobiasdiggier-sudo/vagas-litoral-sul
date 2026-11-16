@@ -1,0 +1,78 @@
+{% extends "prefeituras/base_area.html" %}
+
+{% block titulo %}Solicitação {{ solicitacao.codigo_acompanhamento }}{% endblock %}
+
+{% block area %}
+<h1>{{ solicitacao.titulo }}</h1>
+<p>
+  Código <strong>{{ solicitacao.codigo_acompanhamento }}</strong> ·
+  enviada em {{ solicitacao.criado_em|date:"d/m/Y H:i" }} ·
+  <span class="situacao situacao--{{ solicitacao.situacao }}">{{ solicitacao.get_situacao_display }}</span>
+</p>
+
+<div class="grade-2">
+  <section aria-labelledby="titulo-vaga">
+    <h2 id="titulo-vaga">Dados da vaga</h2>
+    <dl class="ficha ficha--coluna">
+      <div><dt>Município</dt><dd>{{ solicitacao.municipio.nome }}</dd></div>
+      <div><dt>Área</dt><dd>{{ solicitacao.area.nome }}</dd></div>
+      <div><dt>Tipo de contrato</dt><dd>{{ solicitacao.get_tipo_contrato_display }}</dd></div>
+      <div><dt>Escolaridade mínima</dt><dd>{{ solicitacao.get_escolaridade_display }}</dd></div>
+      <div><dt>Quantidade</dt><dd>{{ solicitacao.quantidade }}</dd></div>
+      <div><dt>Salário</dt><dd>{% if solicitacao.salario %}R$ {{ solicitacao.salario|floatformat:"2g" }}{% else %}A combinar{% endif %}</dd></div>
+      <div><dt>Jornada</dt><dd>{{ solicitacao.jornada }}</dd></div>
+      <div><dt>Vaga PcD</dt><dd>{{ solicitacao.pcd|yesno:"Sim,Não" }}</dd></div>
+      <div><dt>Descrição</dt><dd>{{ solicitacao.descricao|linebreaksbr }}</dd></div>
+      <div><dt>Requisitos</dt><dd>{{ solicitacao.requisitos|default:"-"|linebreaksbr }}</dd></div>
+      <div><dt>Benefícios</dt><dd>{{ solicitacao.beneficios|default:"-"|linebreaksbr }}</dd></div>
+      <div><dt>Como se candidatar</dt><dd>{{ solicitacao.forma_candidatura|linebreaksbr }}</dd></div>
+    </dl>
+  </section>
+
+  <section aria-labelledby="titulo-empresa">
+    <h2 id="titulo-empresa">Empresa e contato</h2>
+    {% if solicitacao.dados_anonimizados_em %}
+      <p class="ajuda">Dados de contato apagados em {{ solicitacao.dados_anonimizados_em|date:"d/m/Y" }} (LGPD).</p>
+    {% endif %}
+    <dl class="ficha ficha--coluna">
+      <div><dt>Empresa</dt><dd>{{ solicitacao.empresa }}</dd></div>
+      <div><dt>CNPJ</dt><dd>{{ solicitacao.cnpj|default:"Não informado" }}</dd></div>
+      <div><dt>Responsável</dt><dd>{{ solicitacao.nome_responsavel|default:"-" }}</dd></div>
+      <div><dt>E-mail</dt><dd>{% if solicitacao.email_responsavel %}<a href="mailto:{{ solicitacao.email_responsavel }}">{{ solicitacao.email_responsavel }}</a>{% else %}-{% endif %}</dd></div>
+      <div><dt>Telefone</dt><dd>{{ solicitacao.telefone_responsavel|default:"-" }}</dd></div>
+    </dl>
+
+    {% if solicitacao.moderado_em %}
+      <h2>Moderação</h2>
+      <p>
+        Analisada por {{ solicitacao.moderado_por.get_full_name|default:solicitacao.moderado_por.username|default:"usuário removido" }}
+        em {{ solicitacao.moderado_em|date:"d/m/Y H:i" }}.
+      </p>
+      {% if solicitacao.motivo_recusa %}<p><strong>Motivo da recusa:</strong> {{ solicitacao.motivo_recusa|linebreaksbr }}</p>{% endif %}
+      {% if solicitacao.vaga_gerada %}
+        <p><a href="{% url 'prefeituras:vaga_editar' solicitacao.vaga_gerada.pk %}">Editar a vaga gerada</a></p>
+      {% endif %}
+    {% endif %}
+  </section>
+</div>
+
+{% if solicitacao.situacao == "pendente" %}
+<section class="secao moderacao" aria-labelledby="titulo-moderar">
+  <h2 id="titulo-moderar">Moderar</h2>
+
+  <form action="{% url 'prefeituras:solicitacao_aprovar' solicitacao.pk %}" method="post" class="moderacao__aprovar">
+    {% csrf_token %}
+    <p>Ao aprovar, a vaga é publicada imediatamente, válida por 30 dias.</p>
+    <button type="submit" class="botao botao--primario">Aprovar e publicar</button>
+  </form>
+
+  <form action="{% url 'prefeituras:solicitacao_recusar' solicitacao.pk %}" method="post" class="moderacao__recusar">
+    {% csrf_token %}
+    <div class="campo">{{ form_recusa.motivo_recusa.as_field_group }}</div>
+    <button type="submit" class="botao botao--perigo">Recusar</button>
+  </form>
+</section>
+{% endif %}
+
+<p><a href="{% url 'prefeituras:solicitacoes_lista' %}">« Voltar para a fila</a></p>
+{% endblock %}

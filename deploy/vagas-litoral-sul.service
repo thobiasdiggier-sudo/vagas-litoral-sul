@@ -1,0 +1,24 @@
+# Serviço do systemd que mantém o Gunicorn rodando.
+# Copie para /etc/systemd/system/vagas-litoral-sul.service e rode:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now vagas-litoral-sul
+
+[Unit]
+Description=Vagas Litoral Sul (Gunicorn)
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/srv/vagas-litoral-sul
+# Cria /run/vagas-litoral-sul/ para o arquivo de socket
+RuntimeDirectory=vagas-litoral-sul
+ExecStart=/srv/vagas-litoral-sul/.venv/bin/gunicorn \
+    --workers 3 \
+    --bind unix:/run/vagas-litoral-sul/gunicorn.sock \
+    --access-logfile - \
+    config.wsgi:application
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block titulo %}Acompanhar solicitação{% endblock %}
+
+{% block conteudo %}
+<h1>Acompanhar solicitação</h1>
+<p>Informe o código recebido ao enviar a vaga (formato VLS-XXXX-XXXX).</p>
+
+<form method="get" class="formulario formulario--estreito">
+  <div class="campo">{{ form.codigo.as_field_group }}</div>
+  <div class="acoes">
+    <button type="submit" class="botao botao--primario">Consultar</button>
+  </div>
+</form>
+
+{% if pesquisou %}
+  {% if solicitacao %}
+    <section class="resultado-consulta" aria-labelledby="titulo-resultado" role="status">
+      <h2 id="titulo-resultado">Situação: <span class="situacao situacao--{{ solicitacao.situacao }}">{{ solicitacao.get_situacao_display }}</span></h2>
+      <dl class="ficha">
+        <div><dt>Vaga</dt><dd>{{ solicitacao.titulo }}</dd></div>
+        <div><dt>Empresa</dt><dd>{{ solicitacao.empresa }}</dd></div>
+        <div><dt>Município</dt><dd>{{ solicitacao.municipio.nome }}</dd></div>
+        <div><dt>Enviada em</dt><dd>{{ solicitacao.criado_em|date:"d/m/Y H:i" }}</dd></div>
+        {% if solicitacao.moderado_em %}
+          <div><dt>Analisada em</dt><dd>{{ solicitacao.moderado_em|date:"d/m/Y H:i" }}</dd></div>
+        {% endif %}
+      </dl>
+
+      {% if solicitacao.situacao == "pendente" %}
+        <p>Sua solicitação aguarda a análise da prefeitura.</p>
+      {% elif solicitacao.situacao == "aprovada" and solicitacao.vaga_gerada %}
+        <p>Sua vaga foi publicada: <a href="{% url 'vagas:detalhe' solicitacao.vaga_gerada.pk %}">ver a vaga no portal</a>.</p>
+      {% elif solicitacao.situacao == "recusada" %}
+        <p><strong>Motivo da recusa:</strong> {{ solicitacao.motivo_recusa|linebreaksbr }}</p>
+        <p>Você pode corrigir as informações e <a href="{% url 'vagas:divulgar' %}">enviar uma nova solicitação</a>.</p>
+      {% endif %}
+    </section>
+  {% else %}
+    <p class="mensagem mensagem--aviso" role="status">Nenhuma solicitação encontrada com esse código. Confira se digitou corretamente.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block titulo %}Solicitação enviada{% endblock %}
+
+{% block conteudo %}
+<h1>Solicitação enviada</h1>
+
+<section class="caixa-codigo" aria-labelledby="titulo-codigo">
+  <h2 id="titulo-codigo">Seu código de acompanhamento</h2>
+  <p class="codigo">{{ codigo }}</p>
+  <p><strong>Anote ou tire um print deste código.</strong> Ele é a única forma de consultar a situação do seu pedido.</p>
+</section>
+
+<p>
+  A prefeitura vai conferir as informações. Se estiver tudo certo, a vaga será
+  publicada no portal. Se for recusada, o motivo aparecerá na consulta.
+</p>
+
+<div class="acoes">
+  <a class="botao botao--primario" href="{% url 'vagas:acompanhar' %}?codigo={{ codigo|urlencode }}">Acompanhar solicitação</a>
+  <a class="botao botao--secundario" href="{% url 'vagas:divulgar' %}">Divulgar outra vaga</a>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{# Card de vaga reutilizado nas listas. Recebe a variável "vaga". #}
+<article class="card-vaga">
+  <h3 class="card-vaga__titulo">
+    <a href="{% url 'vagas:detalhe' vaga.pk %}">{{ vaga.titulo }}</a>
+  </h3>
+  <p class="card-vaga__empresa">{{ vaga.empresa }} · {{ vaga.municipio.nome }}/RN</p>
+
+  {% include "vagas/_badges.html" %}
+
+  <dl class="card-vaga__dados">
+    <div><dt>Salário</dt><dd>{% if vaga.salario %}R$ {{ vaga.salario|floatformat:"2g" }}{% else %}A combinar{% endif %}</dd></div>
+    <div><dt>Vagas</dt><dd>{{ vaga.quantidade }}</dd></div>
+    <div><dt>Publicada em</dt><dd>{{ vaga.data_publicacao|date:"d/m/Y" }}</dd></div>
+    <div><dt>Inscrições até</dt><dd>{{ vaga.data_expiracao|date:"d/m/Y" }}</dd></div>
+  </dl>
+</article>

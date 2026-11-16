@@ -1,0 +1,14 @@
+{# Paginação. A tag querystring (Django 5.1+) mantém a busca e os filtros. #}
+{% if pagina.has_other_pages %}
+<nav class="paginacao" aria-label="Paginação">
+  <ul>
+    {% if pagina.has_previous %}
+      <li><a href="{% querystring page=pagina.previous_page_number %}" rel="prev">« Anterior</a></li>
+    {% endif %}
+    <li><span aria-current="page">Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span></li>
+    {% if pagina.has_next %}
+      <li><a href="{% querystring page=pagina.next_page_number %}" rel="next">Próxima »</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

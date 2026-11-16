@@ -1,0 +1,61 @@
+{% extends "prefeituras/base_area.html" %}
+
+{% block titulo %}Estatísticas{% endblock %}
+
+{% block area %}
+<h1>Estatísticas</h1>
+
+<section class="secao" aria-labelledby="titulo-solicitacoes">
+  <h2 id="titulo-solicitacoes">Solicitações das empresas</h2>
+  <ul class="contadores">
+    {% for rotulo, total in solicitacoes %}
+      <li class="contador">
+        <span class="contador__numero">{{ total }}</span>
+        <span class="contador__rotulo">{{ rotulo|lower }}s</span>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="secao" aria-labelledby="titulo-municipios">
+  <h2 id="titulo-municipios">Vagas por município</h2>
+  <div class="tabela-rolagem">
+    <table class="tabela">
+      <thead>
+        <tr><th scope="col">Município</th><th scope="col">Abertas agora</th><th scope="col">Total cadastrado</th><th scope="col"><span class="visualmente-oculto">Gráfico</span></th></tr>
+      </thead>
+      <tbody>
+        {% for municipio in por_municipio %}
+          <tr>
+            <th scope="row">{{ municipio.nome }}</th>
+            <td>{{ municipio.abertas }}</td>
+            <td>{{ municipio.total }}</td>
+            <td class="tabela__barra" aria-hidden="true"><span class="barra" style="width: {% widthratio municipio.total maior_municipio 100 %}%"></span></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="secao" aria-labelledby="titulo-areas">
+  <h2 id="titulo-areas">Vagas por área de atuação</h2>
+  <div class="tabela-rolagem">
+    <table class="tabela">
+      <thead>
+        <tr><th scope="col">Área</th><th scope="col">Abertas agora</th><th scope="col">Total cadastrado</th><th scope="col"><span class="visualmente-oculto">Gráfico</span></th></tr>
+      </thead>
+      <tbody>
+        {% for area in por_area %}
+          <tr>
+            <th scope="row">{{ area.nome }}</th>
+            <td>{{ area.abertas }}</td>
+            <td>{{ area.total }}</td>
+            <td class="tabela__barra" aria-hidden="true"><span class="barra" style="width: {% widthratio area.total maior_area 100 %}%"></span></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

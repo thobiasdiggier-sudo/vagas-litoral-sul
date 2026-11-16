@@ -1,0 +1,14 @@
+{# Formulário de busca e filtros (enviado por GET para a lista de vagas). #}
+<form class="filtros" action="{% url 'vagas:lista' %}" method="get">
+  <div class="filtros__campos">
+    {% for campo in form %}
+      <div class="campo{% if campo.name == 'q' %} campo--largo{% endif %}{% if campo.name == 'pcd' %} campo--checkbox{% endif %}">
+        {{ campo.as_field_group }}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="acoes">
+    <button type="submit" class="botao botao--primario">Buscar vagas</button>
+    <a class="botao botao--secundario" href="{% url 'vagas:lista' %}">Limpar filtros</a>
+  </div>
+</form>

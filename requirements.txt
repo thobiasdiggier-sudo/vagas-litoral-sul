@@ -1,0 +1,2 @@
+# Única dependência do projeto. Django 5.2 é versão LTS (suporte até abril de 2028).
+Django>=5.2,<5.3

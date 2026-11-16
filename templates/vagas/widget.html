@@ -1,0 +1,28 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Últimas vagas – Vagas Litoral Sul</title>
+  <link rel="stylesheet" href="{% static 'css/ifrn.css' %}">
+</head>
+{# Página leve, feita para ser exibida em <iframe> no site do campus #}
+<body class="widget">
+  <h1 class="widget__titulo">Últimas vagas – Litoral Sul</h1>
+  {% if vagas %}
+    <ul class="widget__lista">
+      {% for vaga in vagas %}
+        <li class="widget__item">
+          <a href="{% url 'vagas:detalhe' vaga.pk %}" target="_blank" rel="noopener noreferrer">{{ vaga.titulo }}<span class="visualmente-oculto"> (abre em nova aba)</span></a>
+          <span class="widget__local">{{ vaga.municipio.nome }} · {{ vaga.get_tipo_contrato_display }}{% if vaga.pcd %} · PcD{% endif %}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Nenhuma vaga aberta no momento.</p>
+  {% endif %}
+  <p class="widget__rodape">
+    <a href="{% url 'vagas:lista' %}" target="_blank" rel="noopener noreferrer">Ver todas as vagas<span class="visualmente-oculto"> (abre em nova aba)</span></a>
+  </p>
+</body>
+</html>

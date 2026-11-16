@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block titulo %}Sobre o projeto{% endblock %}
+
+{% block conteudo %}
+<article class="texto-longo">
+  <h1>Sobre o projeto</h1>
+
+  <p>
+    O <strong>Vagas Litoral Sul</strong> é um projeto de extensão do
+    <strong>IFRN Campus Canguaretama</strong>. O portal reúne, em um só lugar,
+    as ofertas de emprego dos municípios do Agreste Litoral Sul potiguar:
+    Arês, Baía Formosa, Canguaretama, Espírito Santo, Goianinha, Montanhas,
+    Pedro Velho, Senador Georgino Avelino, Tibau do Sul e Vila Flor.
+  </p>
+
+  <h2>Como funciona</h2>
+  <ul>
+    <li><strong>Para quem procura emprego:</strong> consulte as vagas abertas, filtre por município, área, escolaridade e tipo de contrato, e candidate-se diretamente com o contratante, pela forma indicada em cada vaga.</li>
+    <li><strong>Para empresas:</strong> preencha o formulário <a href="{% url 'vagas:divulgar' %}">Divulgue sua vaga</a>. A prefeitura confere os dados antes de publicar.</li>
+    <li><strong>Para as prefeituras:</strong> os setores responsáveis por trabalho e emprego cadastram vagas e analisam os pedidos das empresas do seu município.</li>
+  </ul>
+
+  <h2>Quem desenvolve</h2>
+  <p>
+    O sistema é desenvolvido e mantido por estudantes do Curso Técnico em
+    Informática do IFRN Campus Canguaretama, com orientação de servidores do
+    campus, como atividade de extensão junto à comunidade.
+  </p>
+
+  <h2>Contato</h2>
+  <address>
+    IFRN Campus Canguaretama<br>
+    BR-101, Km 160, S/N, Areia Branca<br>
+    Canguaretama/RN – CEP 59190-000
+  </address>
+</article>
+{% endblock %}
